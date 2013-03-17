@@ -1,0 +1,34 @@
+on alfred_script(input_state)
+	
+	set growl_notify to "/usr/local/bin/growlnotify"
+	set action to "muted"
+	set newVolume to 0
+	
+	if input_state contains "unmute" then
+		set action to "unmuted"
+		set volume input volume 80
+	else if input_state contains "mute" then
+		set action to "muted"
+		set volume input volume 0
+	else
+		try
+			(input_state as integer) div 1
+			set gain to (input_state as integer)
+			if gain ≥ 0 and gain ≤ 100 then
+				set action to "input sensitivity set to "
+				set action to action & input_state & "%"
+				set volume input volume gain
+			else
+				set action to "Invalid mic gain value " & gain
+				set action to action & ", must be [0-100]"
+			end if
+		on error
+			set action to "action must be 'mute', 'unmute', "
+			set action to action & "or '[0-100]' not <"
+			set action to action & input_state & ">"
+		end try
+	end if
+	
+	do shell script growl_notify & " -n 'Mic control' -m 'Mic - " & action & "'"
+	
+end alfred_script
