@@ -10,5 +10,5 @@ Pre-requisites:
 
 Commands
 * mic mute
-* mic unmut
+* mic unmute
 * mic \[0 - 100\]  (Set input gain on microphone)
